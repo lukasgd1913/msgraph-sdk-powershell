@@ -61754,11 +61754,11 @@ paths:
     get:
       tags:
         - sites.site
-      summary: List sites
-      description: "List all available sites in an organization. Specific filter criteria and query options are also supported and described below: In addition, you can use a $search query against the /sites collection to find sites matching given keywords.\nIf you want to list all sites across all geographies, refer to getAllSites. For more guidance about building applications that use site discovery for scanning purposes, see Best practices for discovering files and detecting changes at scale."
+      summary: Search for sites
+      description: Search across a SharePoint tenant for sites that match keywords provided. The only property that works for sorting is createdDateTime. The search filter is a free text search that uses multiple properties when retrieving the search results.
       externalDocs:
         description: Find more info here
-        url: https://learn.microsoft.com/graph/api/site-list?view=graph-rest-1.0
+        url: https://learn.microsoft.com/graph/api/site-search?view=graph-rest-1.0
       operationId: site_ListSite
       parameters:
         - $ref: '#/components/parameters/top'
@@ -116419,7 +116419,7 @@ components:
               description: Optional. Short text description of the app used to generate the activity for use in cases when the app is not installed on the user’s local device.
               nullable: true
             contentInfo:
-              description: Optional. A custom piece of data - JSON-LD extensible description of content according to schema.org syntax.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             contentUrl:
               type: string
               description: 'Optional. Used in the event the content can be rendered outside of a native or web-based app experience (for example, a pointer to an item in an RSS feed).'
@@ -119606,7 +119606,7 @@ components:
               description: 'The type of reference is associated with the name. Possible values are: String, Integer, Double, Boolean, Range. Read-only.'
               nullable: true
             value:
-              description: 'The formula that the name is defined to refer to. For example, =Sheet14!$B$2:$H$12 and =4.75. Read-only.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
             visible:
               type: boolean
               description: Indicates whether the object is visible.
@@ -119780,6 +119780,11 @@ components:
               $ref: '#/components/schemas/microsoft.graph.printer'
           additionalProperties:
             type: object
+    microsoft.graph.Json:
+      title: Json
+      type: object
+      additionalProperties:
+        type: object
     microsoft.graph.status:
       title: status
       enum:
@@ -119800,7 +119805,7 @@ components:
           description: Optional. Background color used to render the activity in the UI - brand color for the application source of the activity. Must be a valid hex color
           nullable: true
         content:
-          description: Optional. Custom piece of data - JSON object used to provide custom content to render the activity in the Windows Shell UI
+          $ref: '#/components/schemas/microsoft.graph.Json'
         description:
           type: string
           description: 'Optional. Longer text description of the user''s unique activity (example: document name, first sentence, and/or metadata)'
@@ -121210,7 +121215,7 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/microsoft.graph.directoryObject'
-              description: 'The owners of the group. Limited to 100 owners. Nullable. If this property isn''t specified when creating a Microsoft 365 group, the calling user is automatically assigned as the group owner.  Supports $filter (/$count eq 0, /$count ne 0, /$count eq 1, /$count ne 1). Supports $expand including nested $select. For example, /groups?$filter=startsWith(displayName,''Role'')&$select=id,displayName&$expand=owners($select=id,userPrincipalName,displayName).'
+              description: 'The owners of the group who can be users or service principals. Limited to 100 owners. Nullable. If this property isn''t specified when creating a Microsoft 365 group the calling user (admin or non-admin) is automatically assigned as the group owner. A non-admin user can''t explicitly add themselves to this collection when they''re creating the group. For more information, see the related known issue. For security groups, the admin user isn''t automatically added to this collection. For more information, see the related known issue. Supports $filter (/$count eq 0, /$count ne 0, /$count eq 1, /$count ne 1); Supports $expand including nested $select. For example, /groups?$filter=startsWith(displayName,''Role'')&$select=id,displayName&$expand=owners($select=id,userPrincipalName,displayName).'
               x-ms-navigationProperty: true
             permissionGrants:
               type: array
@@ -123182,7 +123187,7 @@ components:
               description: The name of the table column.
               nullable: true
             values:
-              description: 'TRepresents the raw values of the specified range. The data returned could be of type string, number, or a Boolean. Cell that contain an error will return the error string.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
             filter:
               $ref: '#/components/schemas/microsoft.graph.workbookFilter'
           additionalProperties:
@@ -123200,7 +123205,7 @@ components:
               description: The index of the row within the rows collection of the table. Zero-based. Read-only.
               format: int32
             values:
-              description: 'The raw values of the specified range. The data returned could be of type string, number, or a Boolean. Any cell that contain an error will return the error string.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
           additionalProperties:
             type: object
     microsoft.graph.workbookTableSort:
@@ -127705,7 +127710,7 @@ components:
           type: string
           description: 'An operator in a cell; for example, =, >, <, <=, or <>.'
         values:
-          description: The values that appear in the cell.
+          $ref: '#/components/schemas/microsoft.graph.Json'
       additionalProperties:
         type: object
     microsoft.graph.workbookIcon:
@@ -127730,13 +127735,13 @@ components:
           type: object
           properties:
             majorUnit:
-              description: Represents the interval between two major tick marks. Can be set to a numeric value or an empty string.  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             maximum:
-              description: Represents the maximum value on the value axis.  Can be set to a numeric value or an empty string (for automatic axis values).  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             minimum:
-              description: Represents the minimum value on the value axis. Can be set to a numeric value or an empty string (for automatic axis values).  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             minorUnit:
-              description: Represents the interval between two minor tick marks. 'Can be set to a numeric value or an empty string (for automatic axis values). The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             format:
               $ref: '#/components/schemas/microsoft.graph.workbookChartAxisFormat'
             majorGridlines:
@@ -127830,7 +127835,7 @@ components:
           type: object
           properties:
             value:
-              description: The value of a chart point. Read-only.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             format:
               $ref: '#/components/schemas/microsoft.graph.workbookChartPointFormat'
           additionalProperties:

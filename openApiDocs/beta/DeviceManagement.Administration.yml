@@ -17236,6 +17236,9 @@ components:
               nullable: true
             osStatus:
               $ref: '#/components/schemas/microsoft.graph.cloudPcDeviceImageOsStatus'
+            osVersionNumber:
+              type: string
+              nullable: true
             scopeIds:
               type: array
               items:
@@ -17346,6 +17349,9 @@ components:
             offerName:
               type: string
               description: The offer name of this gallery image that is passed to ARM to retrieve the image resource. Read-only.
+              nullable: true
+            osVersionNumber:
+              type: string
               nullable: true
             publisher:
               type: string
@@ -17494,6 +17500,8 @@ components:
               nullable: true
             autopatch:
               $ref: '#/components/schemas/microsoft.graph.cloudPcProvisioningPolicyAutopatch'
+            autopilotConfiguration:
+              $ref: '#/components/schemas/microsoft.graph.cloudPcAutopilotConfiguration'
             cloudPcGroupDisplayName:
               type: string
               description: The display name of the Cloud PC group that the Cloud PCs reside in. Read-only.
@@ -20453,6 +20461,21 @@ components:
           nullable: true
       additionalProperties:
         type: object
+    microsoft.graph.cloudPcAutopilotConfiguration:
+      title: cloudPcAutopilotConfiguration
+      type: object
+      properties:
+        applicationTimeoutInMinutes:
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          format: int32
+        devicePreparationProfileId:
+          type: string
+        onFailureDeviceAccessDenied:
+          type: boolean
+      additionalProperties:
+        type: object
     microsoft.graph.cloudPcDomainJoinConfiguration:
       title: cloudPcDomainJoinConfiguration
       type: object
@@ -20913,7 +20936,7 @@ components:
               description: Optional. Short text description of the app used to generate the activity for use in cases when the app is not installed on the user’s local device.
               nullable: true
             contentInfo:
-              description: Optional. A custom piece of data - JSON-LD extensible description of content according to schema.org syntax.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             contentUrl:
               type: string
               description: 'Optional. Used in the event the content can be rendered outside of a native or web-based app experience (for example, a pointer to an item in an RSS feed).'
@@ -24007,7 +24030,7 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/microsoft.graph.appLogCollectionRequest'
-              description: The collection property of AppLogUploadRequest.
+              description: Indicates collection of App Log Upload Request.
               x-ms-navigationProperty: true
           additionalProperties:
             type: object
@@ -24933,6 +24956,9 @@ components:
         - crossRegionDisasterRecoveryReport
         - performanceTrendReport
         - inaccessibleCloudPcTrendReport
+        - regionalConnectionQualityTrendReport
+        - regionalConnectionQualityInsightsReport
+        - remoteConnectionQualityReport
       type: string
     microsoft.graph.cloudPcSnapshotType:
       title: cloudPcSnapshotType
@@ -24971,6 +24997,8 @@ components:
         - norway
         - switzerland
         - southKorea
+        - middleEast
+        - mexico
       type: string
     microsoft.graph.cloudPcSupportedRegionStatus:
       title: cloudPcSupportedRegionStatus
@@ -26145,6 +26173,11 @@ components:
               $ref: '#/components/schemas/microsoft.graph.printer'
           additionalProperties:
             type: object
+    microsoft.graph.Json:
+      title: Json
+      type: object
+      additionalProperties:
+        type: object
     microsoft.graph.status:
       title: status
       enum:
@@ -26165,7 +26198,7 @@ components:
           description: Optional. Background color used to render the activity in the UI - brand color for the application source of the activity. Must be a valid hex color
           nullable: true
         content:
-          description: Optional. Custom piece of data - JSON object used to provide custom content to render the activity in the Windows Shell UI
+          $ref: '#/components/schemas/microsoft.graph.Json'
         description:
           type: string
           description: 'Optional. Longer text description of the user''s unique activity (example: document name, first sentence, and/or metadata)'
@@ -30010,10 +30043,10 @@ components:
             description: Windows 10 Azure AD Join using Device Auth.
             name: windowsAzureADJoinUsingDeviceAuth
           - value: appleUserEnrollment
-            description: Device managed by Apple user enrollment
+            description: Indicates the device is enrolled via Apple User Enrollment with Company Portal. It results in an enrollment with a new partition for managed apps and data and which supports a limited set of management capabilities
             name: appleUserEnrollment
           - value: appleUserEnrollmentWithServiceAccount
-            description: Device managed by Apple user enrollment with service account
+            description: Indicates the device is enrolled via Apple User Enrollment with Company Portal using a device enrollment manager user. It results in an enrollment with a new partition for managed apps and data and which supports a limited set of management capabilities
             name: appleUserEnrollmentWithServiceAccount
           - value: azureAdJoinUsingAzureVmExtension
             description: Azure AD Join enrollment when an Azure VM is provisioned
@@ -32991,11 +33024,11 @@ components:
       properties:
         displayName:
           type: string
-          description: 'The display name of the identity. For drive items, the display name might not always be available or up to date. For example, if a user changes their display name the API might show the new value in a future response, but the items associated with the user don''t show up as changed when using delta.'
+          description: The display name of the identity. This property is read-only.
           nullable: true
         id:
           type: string
-          description: 'Unique identifier for the identity or actor. For example, in the access reviews decisions API, this property might record the id of the principal, that is, the group, user, or application that''s subject to review.'
+          description: The identifier of the identity. This property is read-only.
           nullable: true
       additionalProperties:
         type: object
@@ -40870,7 +40903,7 @@ components:
               description: 'The type of reference is associated with the name. Possible values are: String, Integer, Double, Boolean, Range. Read-only.'
               nullable: true
             value:
-              description: 'The formula that the name is defined to refer to. For example, =Sheet14!$B$2:$H$12 and =4.75. Read-only.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
             visible:
               type: boolean
               description: Indicates whether the object is visible.
@@ -44604,7 +44637,7 @@ components:
               description: The name of the table column.
               nullable: true
             values:
-              description: 'Represents the raw values of the specified range. The data returned could be of type string, number, or a Boolean. Cell that contain an error will return the error string.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
             filter:
               $ref: '#/components/schemas/microsoft.graph.workbookFilter'
           additionalProperties:
@@ -44622,7 +44655,7 @@ components:
               description: The index of the row within the rows collection of the table. Zero-based. Read-only.
               format: int32
             values:
-              description: 'The raw values of the specified range. The data returned could be of type string, number, or a Boolean. Any cell that contain an error will return the error string.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
           additionalProperties:
             type: object
     microsoft.graph.workbookTableSort:
@@ -45926,7 +45959,7 @@ components:
           type: string
           description: 'An operator in a cell; for example, =, >, <, <=, or <>.'
         values:
-          description: The values that appear in the cell.
+          $ref: '#/components/schemas/microsoft.graph.Json'
       additionalProperties:
         type: object
     microsoft.graph.workbookIcon:
@@ -45951,13 +45984,13 @@ components:
           type: object
           properties:
             majorUnit:
-              description: Represents the interval between two major tick marks. Can be set to a numeric value or an empty string.  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             maximum:
-              description: Represents the maximum value on the value axis.  Can be set to a numeric value or an empty string (for automatic axis values).  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             minimum:
-              description: Represents the minimum value on the value axis. Can be set to a numeric value or an empty string (for automatic axis values).  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             minorUnit:
-              description: Represents the interval between two minor tick marks. 'Can be set to a numeric value or an empty string (for automatic axis values). The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             format:
               $ref: '#/components/schemas/microsoft.graph.workbookChartAxisFormat'
             majorGridlines:
@@ -46051,7 +46084,7 @@ components:
           type: object
           properties:
             value:
-              description: The value of a chart point. Read-only.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             format:
               $ref: '#/components/schemas/microsoft.graph.workbookChartPointFormat'
           additionalProperties:

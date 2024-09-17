@@ -31332,6 +31332,9 @@ components:
               type: string
               description: 'Fallback token signing certificate that can also be used to sign tokens, for example when the primary signing certificate expires. Formatted as Base64 encoded strings of the public portion of the federated IdP''s token signing certificate. Needs to be compatible with the X509Certificate2 class. Much like the signingCertificate, the nextSigningCertificate property is used if a rollover is required outside of the auto-rollover update, a new federation service is being set up, or if the new token signing certificate isn''t present in the federation properties after the federation service certificate has been updated.'
               nullable: true
+            passwordResetUri:
+              type: string
+              nullable: true
             promptLoginBehavior:
               $ref: '#/components/schemas/microsoft.graph.promptLoginBehavior'
             signingCertificateUpdateStatus:
@@ -34200,7 +34203,7 @@ components:
               description: Optional. Short text description of the app used to generate the activity for use in cases when the app is not installed on the user’s local device.
               nullable: true
             contentInfo:
-              description: Optional. A custom piece of data - JSON-LD extensible description of content according to schema.org syntax.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             contentUrl:
               type: string
               description: 'Optional. Used in the event the content can be rendered outside of a native or web-based app experience (for example, a pointer to an item in an RSS feed).'
@@ -35900,7 +35903,7 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/microsoft.graph.appLogCollectionRequest'
-              description: The collection property of AppLogUploadRequest.
+              description: Indicates collection of App Log Upload Request.
               x-ms-navigationProperty: true
           additionalProperties:
             type: object
@@ -36548,11 +36551,11 @@ components:
       properties:
         displayName:
           type: string
-          description: 'The display name of the identity. For drive items, the display name might not always be available or up to date. For example, if a user changes their display name the API might show the new value in a future response, but the items associated with the user don''t show up as changed when using delta.'
+          description: The display name of the identity. This property is read-only.
           nullable: true
         id:
           type: string
-          description: 'Unique identifier for the identity or actor. For example, in the access reviews decisions API, this property might record the id of the principal, that is, the group, user, or application that''s subject to review.'
+          description: The identifier of the identity. This property is read-only.
           nullable: true
       additionalProperties:
         type: object
@@ -40880,6 +40883,11 @@ components:
               $ref: '#/components/schemas/microsoft.graph.printer'
           additionalProperties:
             type: object
+    microsoft.graph.Json:
+      title: Json
+      type: object
+      additionalProperties:
+        type: object
     microsoft.graph.status:
       title: status
       enum:
@@ -40900,7 +40908,7 @@ components:
           description: Optional. Background color used to render the activity in the UI - brand color for the application source of the activity. Must be a valid hex color
           nullable: true
         content:
-          description: Optional. Custom piece of data - JSON object used to provide custom content to render the activity in the Windows Shell UI
+          $ref: '#/components/schemas/microsoft.graph.Json'
         description:
           type: string
           description: 'Optional. Longer text description of the user''s unique activity (example: document name, first sentence, and/or metadata)'
@@ -42651,10 +42659,10 @@ components:
             description: Windows 10 Azure AD Join using Device Auth.
             name: windowsAzureADJoinUsingDeviceAuth
           - value: appleUserEnrollment
-            description: Device managed by Apple user enrollment
+            description: Indicates the device is enrolled via Apple User Enrollment with Company Portal. It results in an enrollment with a new partition for managed apps and data and which supports a limited set of management capabilities
             name: appleUserEnrollment
           - value: appleUserEnrollmentWithServiceAccount
-            description: Device managed by Apple user enrollment with service account
+            description: Indicates the device is enrolled via Apple User Enrollment with Company Portal using a device enrollment manager user. It results in an enrollment with a new partition for managed apps and data and which supports a limited set of management capabilities
             name: appleUserEnrollmentWithServiceAccount
           - value: azureAdJoinUsingAzureVmExtension
             description: Azure AD Join enrollment when an Azure VM is provisioned
@@ -53504,7 +53512,7 @@ components:
               description: 'The type of reference is associated with the name. Possible values are: String, Integer, Double, Boolean, Range. Read-only.'
               nullable: true
             value:
-              description: 'The formula that the name is defined to refer to. For example, =Sheet14!$B$2:$H$12 and =4.75. Read-only.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
             visible:
               type: boolean
               description: Indicates whether the object is visible.
@@ -56663,7 +56671,7 @@ components:
               description: The name of the table column.
               nullable: true
             values:
-              description: 'Represents the raw values of the specified range. The data returned could be of type string, number, or a Boolean. Cell that contain an error will return the error string.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
             filter:
               $ref: '#/components/schemas/microsoft.graph.workbookFilter'
           additionalProperties:
@@ -56681,7 +56689,7 @@ components:
               description: The index of the row within the rows collection of the table. Zero-based. Read-only.
               format: int32
             values:
-              description: 'The raw values of the specified range. The data returned could be of type string, number, or a Boolean. Any cell that contain an error will return the error string.'
+              $ref: '#/components/schemas/microsoft.graph.Json'
           additionalProperties:
             type: object
     microsoft.graph.workbookTableSort:
@@ -59290,7 +59298,7 @@ components:
           type: string
           description: 'An operator in a cell; for example, =, >, <, <=, or <>.'
         values:
-          description: The values that appear in the cell.
+          $ref: '#/components/schemas/microsoft.graph.Json'
       additionalProperties:
         type: object
     microsoft.graph.workbookIcon:
@@ -59315,13 +59323,13 @@ components:
           type: object
           properties:
             majorUnit:
-              description: Represents the interval between two major tick marks. Can be set to a numeric value or an empty string.  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             maximum:
-              description: Represents the maximum value on the value axis.  Can be set to a numeric value or an empty string (for automatic axis values).  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             minimum:
-              description: Represents the minimum value on the value axis. Can be set to a numeric value or an empty string (for automatic axis values).  The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             minorUnit:
-              description: Represents the interval between two minor tick marks. 'Can be set to a numeric value or an empty string (for automatic axis values). The returned value is always a number.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             format:
               $ref: '#/components/schemas/microsoft.graph.workbookChartAxisFormat'
             majorGridlines:
@@ -59415,7 +59423,7 @@ components:
           type: object
           properties:
             value:
-              description: The value of a chart point. Read-only.
+              $ref: '#/components/schemas/microsoft.graph.Json'
             format:
               $ref: '#/components/schemas/microsoft.graph.workbookChartPointFormat'
           additionalProperties:
